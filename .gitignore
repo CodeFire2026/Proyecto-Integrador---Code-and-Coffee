@@ -33,3 +33,4 @@ nbdist/
 
 # Datos que genera el programa al correr
 datos/
+/GestStock/nbproject/private/
