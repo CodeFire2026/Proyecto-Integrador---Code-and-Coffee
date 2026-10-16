@@ -2,7 +2,7 @@ package geststock;
 
 public enum Seccion {
     
-    //Creamos la sección Enum, la cual le pone nombre a cada valor posible.
+    // Creamos la sección Enum, la cual le pone nombre a cada valor posible.
     
     BEBIDAS ("Bebidas"),
     FRUTAS ("Frutas"),
