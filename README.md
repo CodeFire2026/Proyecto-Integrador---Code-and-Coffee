@@ -11,7 +11,9 @@
 
 ## 📖 Descripción
 
-> _Este repositorio será utilizado para realizar los avanzes del Proyecto Final de Java de nuestro grupo en este segundo semestre de la tecnicatura._
+Este repositorio será utilizado para realizar los avanzes del Proyecto Final de Java de nuestro grupo en este segundo semestre de la tecnicatura.
+
+Para mantener una buena organización, dividimos los avances del proyecto en "Hitos", son aproximadamente 10 de ellos que iremos completando conforme terminos con puntos clave del proyecto.
 
 ---
 
