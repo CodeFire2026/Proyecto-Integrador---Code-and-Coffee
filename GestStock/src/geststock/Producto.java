@@ -1,8 +1,8 @@
 package geststock;
-//Creamos la clase producto.
+    // Creamos la clase producto.
 public class Producto {
     
-    //Arrancamos con los atributos.
+    // Arrancamos con los atributos.
     
     private int codigo;
     private String nombre;
@@ -12,7 +12,7 @@ public class Producto {
     private int stockMinimo;
     private boolean activo;
     
-    //Seguimos ahora con el constructor.
+    // Seguimos ahora con el constructor.
  
     public Producto (int codigo, String nombre, Seccion seccion, double precio, int stock, int stockMinimo){
         this.codigo = codigo;
@@ -24,7 +24,7 @@ public class Producto {
         this.activo = true;
     }
 
-    //Establecemos los getters y setters
+    // Establecemos los getters y setters
     
     public String getNombre() {
         return this.nombre;
@@ -74,7 +74,7 @@ public class Producto {
         return this.stock;
     }
 
-    //Métodos propios del producto.
+    // Métodos propios del producto.
     
     public boolean necesitaReposicion() {
         return stock <= stockMinimo;
@@ -96,7 +96,7 @@ public class Producto {
         return true;
     }
     
-    //Mostramos el Producto
+    // Mostramos el Producto
     
     public String aFilaDeTabla() {
         String aviso = "";
@@ -107,7 +107,7 @@ public class Producto {
                 codigo, nombre, seccion.getNombre(), precio, stock, aviso);
     }
     
-    //Utilizamos el método toString
+    // Utilizamos el método toString
     
     @Override
     public String toString() {
