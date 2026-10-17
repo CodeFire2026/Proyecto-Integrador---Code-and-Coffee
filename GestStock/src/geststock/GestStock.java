@@ -1,29 +1,71 @@
 package geststock;
 
 public class GestStock {
-    
+
     public static void main(String[] args) {
-        System.out.println("=== SIMULACION DE ALTA DE PRODUCTO ===");
+        SistemaUsuarios sistema = new SistemaUsuarios();
+        sistema.cargarDatosDeEjemplo();
+        int opcion;
+        do {
+            mostrarPortada();
+            opcion = Entrada.leerEnteroEnRango("Opcion: ", 1, 2);
 
-String nombre = Entrada.leerTexto("Nombre del producto: ");
-Seccion sec = Entrada.leerSeccion("Seccion: ");
-double precio = Entrada.leerDecimalPositivo("Precio: $");
-int stock = Entrada.leerEnteroPositivo("Stock inicial: ");
-int stockMin = Entrada.leerEnteroPositivo("Stock minimo: ");
-int mes = Entrada.leerEnteroEnRango("Mes de alta (1-12): ", 1, 12);
+            if (opcion == 1) {
+                if (intentarLogin(sistema)) {
+                    System.out.println("Aca despues va el menu principal");
+                    Entrada.pausar();
+                    sistema.cerrarSesion();
+                }
+            }
+        } while (opcion != 2);
 
-System.out.println();
-System.out.println("Producto: " + nombre);
-System.out.println("Seccion: " + sec.getNombre());
-System.out.println("Precio: $" + precio);
-System.out.println("Stock: " + stock + " (minimo " + stockMin + ")");
-System.out.println("Mes: " + mes);
+        System.out.println();
+        System.out.println("Hasta la proxima!");
+    }
 
-if (Entrada.confirmar("Confirmas el alta?")) {
-    System.out.println("Producto dado de alta.");
-} else {
-    System.out.println("Alta cancelada.");
-}
-Entrada.pausar();
+    // Muestra la pantalla de bienvenida con las opciones
+    private static void mostrarPortada() {
+        Entrada.limpiarPantalla();
+        System.out.println("============================================");
+        System.out.println("            G E S T S T O C K");
+        System.out.println("     Sistema de Gestion de Productos");
+        System.out.println("============================================");
+        System.out.println();
+        System.out.println("  1. Iniciar sesion");
+        System.out.println("  2. Salir");
+        System.out.println();
+    }
+
+    // Maneja el login con máximo 3 intentos
+    private static boolean intentarLogin(SistemaUsuarios sistema) {
+        int intentos = 0;
+        final int MAX_INTENTOS = 3;
+
+        while (intentos < MAX_INTENTOS) {
+            System.out.println();
+            System.out.println("--- INICIAR SESION ---");
+            String nombre = Entrada.leerTexto("Usuario: ");
+            String clave = Entrada.leerTexto("Clave: ");
+
+            if (sistema.iniciarSesion(nombre, clave)) {
+                Usuario u = sistema.getUsuarioConectado();
+                System.out.println();
+                System.out.println("Bienvenido, " + u.getNombre() + "!");
+                System.out.println("Rol: " + u.getRol().getNombre());
+                Entrada.pausar();
+                return true;
+            }
+
+            intentos++;
+            System.out.println();
+            System.out.println("  >> Usuario o clave incorrectos.");
+            if (intentos < MAX_INTENTOS) {
+                System.out.println("  >> Intentos restantes: " + (MAX_INTENTOS - intentos));
+            } else {
+                System.out.println("  >> Demasiados intentos fallidos.");
+                Entrada.pausar();
+            }
+        }
+        return false;
     }
 }
