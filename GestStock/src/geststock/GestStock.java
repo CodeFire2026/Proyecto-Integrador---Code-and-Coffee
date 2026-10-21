@@ -3,8 +3,14 @@ package geststock;
 public class GestStock {
 
     public static void main(String[] args) {
+        // Creamos las dos estructuras principales del sistema
+        Inventario inventario = new Inventario();
         SistemaUsuarios sistema = new SistemaUsuarios();
+
+        // Cargamos los datos de ejemplo
+        inventario.cargarDatosDeEjemplo();
         sistema.cargarDatosDeEjemplo();
+
         int opcion;
         do {
             mostrarPortada();
@@ -12,8 +18,8 @@ public class GestStock {
 
             if (opcion == 1) {
                 if (intentarLogin(sistema)) {
-                    System.out.println("Aca despues va el menu principal");
-                    Entrada.pausar();
+                    // Si el login fue exitoso, entra al menú principal
+                    menuPrincipal(inventario, sistema);
                     sistema.cerrarSesion();
                 }
             }
@@ -23,7 +29,7 @@ public class GestStock {
         System.out.println("Hasta la proxima!");
     }
 
-    // Muestra la pantalla de bienvenida con las opciones
+    // Pantalla de inicio (login o salir)
     private static void mostrarPortada() {
         Entrada.limpiarPantalla();
         System.out.println("============================================");
@@ -67,5 +73,75 @@ public class GestStock {
             }
         }
         return false;
+    }
+
+    // Muestra el menú según el rol del usuario conectado
+    private static void mostrarMenuPrincipal(Usuario usuario) {
+        Entrada.limpiarPantalla();
+        System.out.println("============================================");
+        System.out.println("  GESTSTOCK  |  " + usuario.getNombre()
+                + " (" + usuario.getRol().getNombre() + ")");
+        System.out.println("============================================");
+        System.out.println();
+        System.out.println("  --- CONSULTAS ---");
+        System.out.println("   1. Listar todos los productos");
+        System.out.println("   2. Listar por seccion");
+        System.out.println("   3. Buscar por nombre");
+        System.out.println("   4. Buscar por codigo");
+        System.out.println("   5. Productos a reponer");
+        System.out.println("   6. Estadisticas generales");
+        System.out.println("   7. Reporte de ventas");
+        System.out.println();
+        System.out.println("  --- OPERACIONES ---");
+        System.out.println("   8. Movimiento de stock");
+        System.out.println();
+
+        // Solo el administrador ve estas opciones
+        if (usuario.esAdministrador()) {
+            System.out.println("  --- ADMINISTRACION ---");
+            System.out.println("   9. Alta de producto");
+            System.out.println("  10. Modificar producto");
+            System.out.println("  11. Eliminar producto");
+            System.out.println();
+        }
+
+        System.out.println("   0. Cerrar sesion");
+        System.out.println();
+    }
+
+    // Bucle principal del menú después del login
+    private static void menuPrincipal(Inventario inventario, SistemaUsuarios sistema) {
+        Usuario usuario = sistema.getUsuarioConectado();
+        int opcion;
+
+        do {
+            mostrarMenuPrincipal(usuario);
+            opcion = Entrada.leerEnteroEnRango("Opcion: ", 0, 11);
+
+            // Doble control de permisos: si no es admin e intenta opciones 9-11, se bloquea
+            if (opcion >= 9 && opcion <= 11 && !usuario.esAdministrador()) {
+                System.out.println();
+                System.out.println("  >> Acceso denegado. Esa opcion es solo para administradores.");
+                Entrada.pausar();
+                continue;
+            }
+
+            switch (opcion) {
+                case 1:
+                    Reportes.listarTodos(inventario);
+                    break;
+
+                case 0:
+                    System.out.println();
+                    System.out.println("Cerrando sesion...");
+                    break;
+
+                default:
+                    System.out.println();
+                    System.out.println("  >> Esa opcion todavia no esta implementada.");
+                    Entrada.pausar();
+                    break;
+            }
+        } while (opcion != 0);
     }
 }
