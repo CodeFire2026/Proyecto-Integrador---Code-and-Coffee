@@ -71,7 +71,7 @@ public class Inventario {
         agregarProducto("Sprite 1.5L", Seccion.BEBIDAS, 5000.0, 30, 8);
         agregarProducto("Agua Mineral 2L", Seccion.BEBIDAS, 3000.0, 80, 20);
         agregarProducto("Manaos 2L", Seccion.BEBIDAS, 2400.0, 5, 10);
-        agregarProducto("Cerveza Quilmes 1L", Seccion.BEBIDAS, 3200.0, 40, 10);
+        agregarProducto("Cerveza Quilmes 1L", Seccion.BEBIDAS, 3200.0, 5, 10);
         //seccion lacteos
         agregarProducto("Yogurt La Serenisima 1L", Seccion.LACTEOS, 5600.0, 25, 10);
         agregarProducto("Leche Liquida 1L", Seccion.LACTEOS, 3500.0, 30,10);
@@ -104,21 +104,27 @@ public class Inventario {
         agregarProducto("Huevo x Maple", Seccion.ALMACEN, 5500.0, 34, 10);
     }
     
+    public Producto buscarPorCodigo(int codigo) {
+        for (int i = 0; i < productos.size(); i++) {
+            Producto p = productos.get(i);
+            if (p.getCodigo() == codigo && p.isActivo()) {
+                return p;
+            }
+        }
+        return null;
+    }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public List<Producto> buscarPorNombre(String texto) {
+        List<Producto> encontrados = new ArrayList<Producto>();
+        String busqueda = texto.toLowerCase();
+
+        for (int i = 0; i < productos.size(); i++) {
+            Producto p = productos.get(i);
+            if (p.isActivo() && p.getNombre().toLowerCase().contains(busqueda)) {
+                encontrados.add(p);
+            }
+        }
+        return encontrados;
+    }   
     
 }
