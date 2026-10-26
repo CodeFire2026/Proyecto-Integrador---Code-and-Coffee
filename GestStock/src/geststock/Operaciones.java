@@ -104,4 +104,182 @@ public class Operaciones {
         }
         Entrada.pausar();
     }
+    
+    // ========== REGISTRAR VENTA ==========
+    public static void registrarVenta(Inventario inventario,
+                                      RegistroVentas registroVentas) {
+        Entrada.limpiarPantalla();
+        System.out.println("--- REGISTRAR VENTA ---");
+        System.out.println();
+
+        int codigo = Entrada.leerEnteroPositivo("Codigo del producto: ");
+        Producto producto = inventario.buscarPorCodigo(codigo);
+
+        if (producto == null || !producto.isActivo()) {
+            System.out.println("El producto no existe o esta eliminado.");
+            Entrada.pausar();
+            return;
+        }
+
+        System.out.println();
+        System.out.println(producto);
+        System.out.println();
+
+        int cantidad;
+        do {
+            cantidad = Entrada.leerEnteroPositivo("Cantidad a vender: ");
+
+            if (cantidad <= 0) {
+                System.out.println("La cantidad debe ser mayor que cero.");
+            }
+        } while (cantidad <= 0);
+
+        if (cantidad > producto.getStock()) {
+            System.out.println("Stock insuficiente. Stock disponible: "
+                    + producto.getStock());
+            Entrada.pausar();
+            return;
+        }
+
+        double precioUnitario = producto.getPrecio();
+        double total = precioUnitario * cantidad;
+
+        System.out.println();
+        System.out.println("Producto: " + producto.getNombre());
+        System.out.println("Cantidad: " + cantidad);
+        System.out.printf("Precio unitario: $%.2f%n", precioUnitario);
+        System.out.printf("Total de la venta: $%.2f%n", total);
+        System.out.println();
+
+        if (!Entrada.confirmar("Confirmas la venta?")) {
+            System.out.println("Venta cancelada.");
+            Entrada.pausar();
+            return;
+        }
+
+        // Descontar stock antes de registrar la venta.
+        if (!producto.reducirStock(cantidad)) {
+            System.out.println("No se pudo completar la venta. "
+                    + "Verifica el stock disponible.");
+            Entrada.pausar();
+            return;
+        }
+
+        Venta venta = registroVentas.registrarVenta(
+                producto.getCodigo(),
+                producto.getNombre(),
+                cantidad,
+                precioUnitario
+        );
+
+        System.out.println();
+        System.out.println("Venta registrada correctamente.");
+        System.out.println(venta);
+        System.out.println("Stock restante: " + producto.getStock());
+
+        Entrada.pausar();
+    }
+    
+    // ========== MOVIMIENTOS DE STOCK ==========
+    public static void movimientoStock(Inventario inventario,
+                                       RegistroVentas registroVentas) {
+        int opcion;
+
+        do {
+            Entrada.limpiarPantalla();
+            System.out.println("--- MOVIMIENTOS DE STOCK ---");
+            System.out.println();
+            System.out.println("1. Entrada de stock");
+            System.out.println("2. Salida de stock");
+            System.out.println("3. Registrar venta");
+            System.out.println("0. Volver");
+            System.out.println();
+
+            opcion = Entrada.leerEnteroEnRango("Opcion: ", 0, 3);
+
+            if (opcion == 3) {
+                Operaciones.registrarVenta(inventario, registroVentas);
+                continue;
+            }
+
+            if (opcion == 0) {
+                break;
+            }
+
+            System.out.println();
+            int codigo = Entrada.leerEnteroPositivo(
+                    "Codigo del producto: ");
+
+            Producto producto = inventario.buscarPorCodigo(codigo);
+
+            if (producto == null || !producto.isActivo()) {
+                System.out.println(
+                        "Producto inexistente o eliminado.");
+                Entrada.pausar();
+                continue;
+            }
+
+            System.out.println();
+            System.out.println(producto);
+            System.out.println();
+
+            int cantidad;
+            do {
+                cantidad = Entrada.leerEnteroPositivo(
+                        "Cantidad: ");
+
+                if (cantidad <= 0) {
+                    System.out.println(
+                            "La cantidad debe ser mayor que cero.");
+                }
+            } while (cantidad <= 0);
+
+            if (opcion == 1) {
+                if ((long) producto.getStock() + cantidad
+                        > Integer.MAX_VALUE) {
+                    System.out.println(
+                            "La cantidad supera el stock maximo permitido.");
+                    Entrada.pausar();
+                    continue;
+                }
+
+                System.out.println("Stock actual: "
+                        + producto.getStock());
+                System.out.println("Stock despues de la entrada: "
+                        + ((long) producto.getStock() + cantidad));
+
+                if (Entrada.confirmar("Confirmas la entrada?")) {
+                    producto.aumentarStock(cantidad);
+                    System.out.println("Stock actualizado correctamente.");
+                } else {
+                    System.out.println("Operacion cancelada.");
+                }
+
+            } else if (opcion == 2) {
+                if (cantidad > producto.getStock()) {
+                    System.out.println(
+                            "Stock insuficiente. Disponible: "
+                            + producto.getStock());
+                    Entrada.pausar();
+                    continue;
+                }
+
+                System.out.println("Stock actual: "
+                        + producto.getStock());
+                System.out.println("Stock despues de la salida: "
+                        + (producto.getStock() - cantidad));
+
+                if (Entrada.confirmar("Confirmas la salida?")) {
+                    producto.reducirStock(cantidad);
+                    System.out.println("Stock actualizado correctamente.");
+                } else {
+                    System.out.println("Operacion cancelada.");
+                }
+            }
+
+            Entrada.pausar();
+
+        } while (opcion != 0);
+    }
+
 }

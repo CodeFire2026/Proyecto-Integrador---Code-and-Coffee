@@ -3,9 +3,10 @@ package geststock;
 public class GestStock {
 
     public static void main(String[] args) {
-        // Creamos las dos estructuras principales del sistema
+        // Creamos las estructuras principales del sistema
         Inventario inventario = new Inventario();
         SistemaUsuarios sistema = new SistemaUsuarios();
+        RegistroVentas registroVentas = new RegistroVentas();
 
         // Cargamos los datos de ejemplo
         inventario.cargarDatosDeEjemplo();
@@ -19,7 +20,7 @@ public class GestStock {
             if (opcion == 1) {
                 if (intentarLogin(sistema)) {
                     // Si el login fue exitoso, entra al menú principal
-                    menuPrincipal(inventario, sistema);
+                    menuPrincipal(inventario, sistema, registroVentas);
                     sistema.cerrarSesion();
                 }
             }
@@ -110,7 +111,7 @@ public class GestStock {
     }
 
     // Bucle principal del menú después del login
-    private static void menuPrincipal(Inventario inventario, SistemaUsuarios sistema) {
+    private static void menuPrincipal(Inventario inventario, SistemaUsuarios sistema, RegistroVentas registroVentas) {
         Usuario usuario = sistema.getUsuarioConectado();
         int opcion;
 
@@ -147,6 +148,10 @@ public class GestStock {
                     Reportes.reporteBajoStock(inventario);
                     break;
 
+                case 8:
+                    Operaciones.movimientoStock(inventario, registroVentas);
+                    break;
+                    
                 case 9:
                     Operaciones.altaProducto(inventario);
                     break;

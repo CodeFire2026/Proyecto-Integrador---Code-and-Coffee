@@ -89,7 +89,7 @@ public class Producto {
     }
     
     public boolean reducirStock (int cantidad) {
-        if (cantidad > this.stock) {
+        if (cantidad <= 0 || cantidad > this.stock) {
             return false;
         }
         this.stock = this.stock - cantidad;
