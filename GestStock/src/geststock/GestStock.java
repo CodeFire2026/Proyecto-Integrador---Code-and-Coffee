@@ -130,21 +130,33 @@ public class GestStock {
                 case 1:
                     Reportes.listarTodos(inventario);
                     break;
-                    
+
                 case 2:
                     Reportes.listarPorSeccion(inventario);
                     break;
-                    
+
                 case 3:
                     Reportes.buscarPorNombre(inventario);
                     break;
-                    
+
                 case 4:
                     Reportes.buscarPorCodigo(inventario);
                     break;
-                    
+
                 case 5:
                     Reportes.reporteBajoStock(inventario);
+                    break;
+
+                case 9:
+                    Operaciones.altaProducto(inventario);
+                    break;
+
+                case 10:
+                    Operaciones.modificarProducto(inventario);
+                    break;
+
+                case 11:
+                    Operaciones.eliminarProducto(inventario);
                     break;
 
                 case 0:
