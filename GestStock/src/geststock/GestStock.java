@@ -147,7 +147,15 @@ public class GestStock {
                 case 5:
                     Reportes.reporteBajoStock(inventario);
                     break;
+                    
+                case 6:
+                    Reportes.estadisticasGenerales(inventario, registroVentas);
+                    break;
 
+                case 7:
+                    Reportes.reporteVentas(registroVentas);
+                    break;
+                    
                 case 8:
                     Operaciones.movimientoStock(inventario, registroVentas);
                     break;

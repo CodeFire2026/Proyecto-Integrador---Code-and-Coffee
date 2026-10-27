@@ -101,6 +101,62 @@ public class Reportes {
         Entrada.pausar();
     }
     
-    
- }
+    public static void estadisticasGenerales(Inventario inventario,
+                                         RegistroVentas registroVentas) {
+    Entrada.limpiarPantalla();
 
+    System.out.println("--- ESTADISTICAS GENERALES ---");
+    System.out.println();
+
+    List<Producto> productos = inventario.getProductosActivos();
+
+    double valorInventario = 0;
+    int unidadesStock = 0;
+    int productosBajoStock = 0;
+
+    for (Producto producto : productos) {
+        valorInventario += producto.getValorEnStock();
+        unidadesStock += producto.getStock();
+
+        if (producto.necesitaReposicion()) {
+            productosBajoStock++;
+        }
+    }
+
+    System.out.println("Productos activos: " + productos.size());
+    System.out.println("Unidades totales en stock: " + unidadesStock);
+    System.out.printf("Valor total del inventario: $%.2f%n", valorInventario);
+    System.out.println("Productos que necesitan reposicion: " + productosBajoStock);
+    System.out.println("Ventas registradas: " + registroVentas.getCantidadVentas());
+    System.out.printf("Recaudacion total: $%.2f%n",
+            registroVentas.calcularTotalVentas());
+
+    Entrada.pausar();
+    }
+    
+    public static void reporteVentas(RegistroVentas registroVentas) {
+    Entrada.limpiarPantalla();
+
+    System.out.println("--- REPORTE DE VENTAS ---");
+    System.out.println();
+
+    if (registroVentas.estaVacio()) {
+        System.out.println("Todavia no hay ventas registradas.");
+        Entrada.pausar();
+        return;
+    }
+
+    for (Venta venta : registroVentas.getVentas()) {
+        System.out.println(venta);
+    }
+
+    System.out.println();
+    System.out.println("Cantidad de ventas: "
+            + registroVentas.getCantidadVentas());
+
+    System.out.printf("Recaudacion total: $%.2f%n",
+            registroVentas.calcularTotalVentas());
+
+    Entrada.pausar();
+    }
+}
